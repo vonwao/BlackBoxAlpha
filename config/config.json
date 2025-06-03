@@ -1,0 +1,32 @@
+{
+  "trading": {
+    "paper_trading": true,
+    "max_position_size": 0.1,
+    "max_portfolio_risk": 0.02,
+    "loop_interval": 60
+  },
+  "pairs_trading": {
+    "enabled": true,
+    "min_correlation": 0.7,
+    "cointegration_pvalue": 0.05,
+    "entry_threshold": 2.0,
+    "exit_threshold": 0.5,
+    "stop_loss": 4.0,
+    "lookback_days": 252
+  },
+  "momentum": {
+    "enabled": true,
+    "fast_ma": 12,
+    "slow_ma": 26,
+    "rsi_period": 14,
+    "rsi_oversold": 30,
+    "rsi_overbought": 70
+  },
+  "notifications": {
+    "telegram_enabled": true,
+    "email_enabled": false,
+    "trade_alerts": true,
+    "error_alerts": true,
+    "daily_summary": true
+  }
+}

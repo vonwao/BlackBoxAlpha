@@ -1,0 +1,19 @@
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "deploy/Dockerfile"
+
+[deploy]
+startCommand = "python main.py"
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10
+
+[env]
+ALPACA_API_KEY = { required = true }
+ALPACA_SECRET_KEY = { required = true }
+ALPACA_BASE_URL = { default = "https://paper-api.alpaca.markets" }
+TELEGRAM_BOT_TOKEN = { required = false }
+TELEGRAM_CHAT_ID = { required = false }
+EMAIL_SMTP_SERVER = { required = false }
+EMAIL_USERNAME = { required = false }
+EMAIL_PASSWORD = { required = false }
+TRADING_ENV = { default = "production" }

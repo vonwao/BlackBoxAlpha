@@ -1,0 +1,51 @@
+{
+  "universe": {
+    "sectors": [
+      "Technology",
+      "Financial Services",
+      "Healthcare",
+      "Consumer Cyclical",
+      "Energy",
+      "Industrials"
+    ],
+    "market_cap_min": 1000000000,
+    "avg_volume_min": 1000000,
+    "price_min": 5.0
+  },
+  "predefined_pairs": [
+    {
+      "symbol1": "AAPL",
+      "symbol2": "MSFT",
+      "sector": "Technology",
+      "description": "Large cap tech giants"
+    },
+    {
+      "symbol1": "JPM",
+      "symbol2": "BAC",
+      "sector": "Financial Services",
+      "description": "Major investment banks"
+    },
+    {
+      "symbol1": "JNJ",
+      "symbol2": "PFE",
+      "sector": "Healthcare",
+      "description": "Pharmaceutical leaders"
+    },
+    {
+      "symbol1": "XOM",
+      "symbol2": "CVX",
+      "sector": "Energy",
+      "description": "Oil & gas majors"
+    }
+  ],
+  "screening_criteria": {
+    "min_trading_days": 252,
+    "max_price_gap": 0.1,
+    "min_correlation": 0.7,
+    "max_correlation": 0.95,
+    "cointegration_pvalue": 0.05,
+    "adf_pvalue": 0.05,
+    "half_life_min": 5,
+    "half_life_max": 50
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "pairs_trading": {
+    "name": "Statistical Arbitrage Pairs Trading",
+    "description": "Mean reversion strategy based on cointegrated pairs",
+    "parameters": {
+      "lookback_period": 252,
+      "formation_period": 60,
+      "trading_period": 30,
+      "entry_zscore": 2.0,
+      "exit_zscore": 0.5,
+      "stop_loss_zscore": 4.0,
+      "min_correlation": 0.7,
+      "max_correlation": 0.95,
+      "cointegration_pvalue": 0.05,
+      "half_life_threshold": 30
+    },
+    "risk_management": {
+      "max_position_size": 0.05,
+      "max_pairs_active": 10,
+      "correlation_threshold": 0.3
+    }
+  },
+  "momentum": {
+    "name": "Momentum Strategy",
+    "description": "Trend following strategy with RSI confirmation",
+    "parameters": {
+      "fast_ma_period": 12,
+      "slow_ma_period": 26,
+      "signal_ma_period": 9,
+      "rsi_period": 14,
+      "rsi_oversold": 30,
+      "rsi_overbought": 70,
+      "volume_threshold": 1.5
+    },
+    "risk_management": {
+      "max_position_size": 0.08,
+      "stop_loss_pct": 0.02,
+      "take_profit_pct": 0.06
+    }
+  }
+}
