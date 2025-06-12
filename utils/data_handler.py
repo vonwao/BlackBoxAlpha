@@ -212,27 +212,31 @@ class DataHandler:
     def calculate_returns(self, data: pd.DataFrame, periods: List[int] = [1, 5, 10, 20]) -> pd.DataFrame:
         """Calculate returns for different periods"""
         returns_data = data.copy()
-        
+
         for period in periods:
-            returns_data[f'return_{period}d'] = data['Close'].pct_change(period)
-        
+            # Data columns are normalized to lowercase in ``_clean_historical_data``
+            # so we access the ``close`` column accordingly.
+            returns_data[f'return_{period}d'] = data['close'].pct_change(period)
+
         return returns_data
     
     def calculate_volatility(self, data: pd.DataFrame, window: int = 20) -> pd.Series:
         """Calculate rolling volatility"""
-        returns = data['Close'].pct_change()
+        # Use the lower-case ``close`` column for consistency
+        returns = data['close'].pct_change()
         volatility = returns.rolling(window=window).std() * np.sqrt(252)  # Annualized
         return volatility
     
     def resample_data(self, data: pd.DataFrame, frequency: str) -> pd.DataFrame:
         """Resample data to different frequency"""
         try:
+            # All columns are stored in lowercase; resample using those names
             resampled = data.resample(frequency).agg({
-                'Open': 'first',
-                'High': 'max',
-                'Low': 'min',
-                'Close': 'last',
-                'Volume': 'sum'
+                'open': 'first',
+                'high': 'max',
+                'low': 'min',
+                'close': 'last',
+                'volume': 'sum'
             }).dropna()
             
             return resampled
