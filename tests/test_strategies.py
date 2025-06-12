@@ -153,5 +153,19 @@ class TestConfigManager(unittest.TestCase):
         value = config.get('nonexistent.key', 'default')
         self.assertEqual(value, 'default')
 
+
+class TestRiskManager(unittest.TestCase):
+    """Test cases for RiskManager position updates"""
+
+    def setUp(self):
+        self.risk_manager = RiskManager()
+
+    def test_realized_pnl_on_sell(self):
+        """Realized P&L should update on partial sells"""
+        self.risk_manager.update_position('TEST', 100, 10.0, 'BUY')
+        self.risk_manager.update_position('TEST', 50, 12.0, 'SELL')
+        pnl = self.risk_manager.positions['TEST']['realized_pnl']
+        self.assertAlmostEqual(pnl, 100.0)
+
 if __name__ == '__main__':
     unittest.main()
