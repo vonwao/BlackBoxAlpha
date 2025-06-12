@@ -318,17 +318,22 @@ class RiskManager:
             if action == 'BUY':
                 total_cost = (position['quantity'] * position['avg_price']) + (quantity * price)
                 total_quantity = position['quantity'] + quantity
-            else:  # SELL
-                total_cost = (position['quantity'] * position['avg_price']) - (quantity * price)
-                total_quantity = position['quantity'] - quantity
-            
-            if total_quantity != 0:
-                position['avg_price'] = abs(total_cost) / abs(total_quantity)
+
+                position['avg_price'] = total_cost / total_quantity if total_quantity != 0 else 0
                 position['quantity'] = total_quantity
-            else:
-                position['avg_price'] = 0
-                position['quantity'] = 0
-            
+
+            else:  # SELL
+                if position['quantity'] >= quantity:
+                    # Realize profit/loss on the portion sold
+                    realized_pnl = (price - position['avg_price']) * quantity
+                    position['realized_pnl'] += realized_pnl
+                    position['quantity'] -= quantity
+                    if position['quantity'] == 0:
+                        position['avg_price'] = 0
+                else:
+                    logger.warning(f"Insufficient position to sell {quantity} of {symbol}")
+                    return
+
             position['value'] = abs(position['quantity']) * price
         
         elif action == 'CLOSE':
