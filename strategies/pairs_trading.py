@@ -41,10 +41,10 @@ class PairsTradingStrategy(BaseStrategy):
         self.active_pairs = {}
         self.pair_statistics = {}
         
-        logger.info(f"Pairs Trading Strategy initialized with {len(self.get_tradeable_pairs())} pairs")
+        logger.info(f"Pairs Trading Strategy initialized with {len(self.get_tradable_pairs())} pairs")
     
-    def get_tradeable_pairs(self) -> List[Tuple[str, str]]:
-        """Get list of tradeable pairs from configuration"""
+    def get_tradable_pairs(self) -> List[Tuple[str, str]]:
+        """Get list of tradable pairs from configuration"""
         pairs = []
         
         # Get predefined pairs from config
@@ -162,7 +162,7 @@ class PairsTradingStrategy(BaseStrategy):
             logger.warning(f"Error calculating half-life: {e}")
             return np.inf
     
-    def is_pair_tradeable(self, statistics: Dict[str, Any]) -> bool:
+    def is_pair_tradable(self, statistics: Dict[str, Any]) -> bool:
         """Check if pair meets trading criteria"""
         if statistics is None:
             return False
@@ -214,8 +214,8 @@ class PairsTradingStrategy(BaseStrategy):
             return []
     
     def update_pair_statistics(self):
-        """Update statistics for all tradeable pairs"""
-        pairs = self.get_tradeable_pairs()
+        """Update statistics for all tradable pairs"""
+        pairs = self.get_tradable_pairs()
         
         for symbol1, symbol2 in pairs:
             pair_key = f"{symbol1}_{symbol2}"
@@ -230,7 +230,7 @@ class PairsTradingStrategy(BaseStrategy):
         signals = []
         
         for pair_key, stats in self.pair_statistics.items():
-            if not self.is_pair_tradeable(stats):
+            if not self.is_pair_tradable(stats):
                 continue
             
             # Skip if pair is already active

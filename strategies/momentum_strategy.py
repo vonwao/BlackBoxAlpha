@@ -39,14 +39,14 @@ class MomentumStrategy(BaseStrategy):
         self.take_profit_pct = self.strategy_config.get('risk_management', {}).get('take_profit_pct', 0.06)
         
         # Universe of symbols to trade
-        self.symbols = self.get_tradeable_symbols()
+        self.symbols = self.get_tradable_symbols()
         
         # Technical indicators cache
         self.indicators_cache = {}
         
         logger.info(f"Momentum Strategy initialized with {len(self.symbols)} symbols")
     
-    def get_tradeable_symbols(self) -> List[str]:
+    def get_tradable_symbols(self) -> List[str]:
         """Get list of symbols to trade"""
         # Default momentum trading universe
         symbols = [
