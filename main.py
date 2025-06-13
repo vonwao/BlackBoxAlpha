@@ -20,6 +20,7 @@ from strategies.momentum_strategy import MomentumStrategy
 from utils.data_handler import DataHandler
 from utils.risk_manager import RiskManager
 from utils.notifications import NotificationManager
+from broker.alpaca_client import AlpacaClient
 
 # Configure logging
 logging.basicConfig(
@@ -41,6 +42,13 @@ class TradingBot:
         self.notification_manager = NotificationManager()
         self.strategies = []
         self.paper_trading = paper_trading
+        self.broker = None
+
+        if not self.paper_trading:
+            api_key = self.config.get_credentials("alpaca_api_key")
+            secret_key = self.config.get_credentials("alpaca_secret_key")
+            base_url = self.config.get_credentials("alpaca_base_url")
+            self.broker = AlpacaClient(api_key, secret_key, base_url)
         
         # Create logs directory if it doesn't exist
         Path('logs').mkdir(exist_ok=True)
@@ -82,15 +90,38 @@ class TradingBot:
                 if self.paper_trading:
                     logger.info(f"PAPER TRADE: {signal}")
                     self.notification_manager.send_trade_alert(signal, paper=True)
+                    self._update_strategy_position(signal)
                 else:
-                    # Execute real trade
                     logger.info(f"EXECUTING TRADE: {signal}")
-                    # Add actual trade execution logic here
-                    self.notification_manager.send_trade_alert(signal, paper=False)
-                    
+                    try:
+                        if signal["action"] == "CLOSE":
+                            order = self.broker.close_position(signal["symbol"])
+                        else:
+                            side = "buy" if signal["action"] == "BUY" else "sell"
+                            order = self.broker.submit_order(
+                                signal["symbol"], signal["quantity"], side
+                            )
+                        filled = self.broker.wait_for_fill(order.id)
+                        if filled and filled.filled_avg_price:
+                            signal["price"] = float(filled.filled_avg_price)
+                        self.notification_manager.send_trade_alert(signal, paper=False)
+                        self._update_strategy_position(signal)
+                    except Exception as api_error:
+                        logger.error(f"Broker error executing trade: {api_error}")
+                        self.notification_manager.send_error_alert(str(api_error))
+
         except Exception as e:
             logger.error(f"Error executing trades: {e}")
             self.notification_manager.send_error_alert(str(e))
+
+    def _update_strategy_position(self, signal):
+        """Update the originating strategy with executed trade info."""
+        for strategy in self.strategies:
+            if strategy.name == signal.get("strategy"):
+                strategy.update_position(
+                    signal["symbol"], signal["action"], signal["quantity"], signal["price"]
+                )
+                break
     
     def update_monitoring(self):
         """Update monitoring and send periodic reports"""
