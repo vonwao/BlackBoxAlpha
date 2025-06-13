@@ -312,6 +312,7 @@ railway up
 ```bash
 pytest tests/ -v
 ```
+Automated tests are executed for every push and pull request via [GitHub Actions](.github/workflows/test.yml).
 
 ### Strategy Testing
 ```bash
