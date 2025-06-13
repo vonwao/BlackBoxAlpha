@@ -176,7 +176,7 @@ class RiskManager:
         return risk_checks
     
     def calculate_max_drawdown(self) -> float:
-        """Calculate maximum drawdown from portfolio history"""
+        """Calculate maximum drawdown from daily_pnl_history (recorded portfolio values)"""
         if len(self.daily_pnl_history) < 2:
             return 0.0
         
